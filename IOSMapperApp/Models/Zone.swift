@@ -1,10 +1,10 @@
-//
-//  Zone.swift
-//  IOSMapperApp
-//
-//  Created by Eben Du Toit on 2018/10/13.
-//  Copyright © 2018 Eben Du Toit. All rights reserved.
-//
+/**
+  Zone.swift
+  IOSMapperApp
+
+  Created by Eben Du Toit on 2018/10/13.
+  Copyright © 2018 Eben Du Toit. All rights reserved.
+*/
 
 import Foundation
 import SwiftyJSON
@@ -16,7 +16,13 @@ class Zone: NSObject {
     let parentZone: Zone?
     var innerZones = [Zone]()
     var Elements = [Element]()
+    /**
+     Instantiate zone from json
     
+     - Parameters:
+       - zoneJson: Zone json from api
+       - parentZone: nullable parent zone
+    */
     init(zoneJson: JSON, parentZone: Zone?) {
         self.zoneID = zoneJson["zoneID"].stringValue
         self.zoneName = zoneJson["zoneName"].stringValue
@@ -33,6 +39,7 @@ class Zone: NSObject {
     
 }
 
+/// construct for elements
 class Element: NSObject {
     let elementId: String
     let zoneID: String
@@ -42,7 +49,13 @@ class Element: NSObject {
     let classType: Int
     let geoJson: String
     let info: String
+    /**
+     Instantiate element from json
     
+     - Parameters:
+       - elementJson: Json from server
+       - zone: Zone in wich element exists
+    */
     init(elementJson: JSON, zone: Zone?){
         self.elementId = elementJson["elementId"].stringValue
         self.zoneID = elementJson["zoneID"].stringValue
@@ -54,24 +67,21 @@ class Element: NSObject {
         self.info = elementJson["info"].stringValue
     }
     
-    
-    init(elementId: String, zoneID: String, zone: Zone?, elementType: Int, raw: String, classType: Int, geoJson: String, info: String) {
-        self.elementId = elementId
-        self.zoneID = zoneID
-        self.zone = zone
-        self.elementType = elementType
-        self.raw = raw
-        self.classType = classType
-        self.geoJson = geoJson
-        self.info = info
-    }
 }
 
 class LiveLocation: NSObject {
     let userID: String
     let pointRaw: String
     let geoJson: String
+    /**
+     Live location used for web socket
     
+     - Parameters:
+       - userId: User id provided by server, can be sent as
+     random if privacy == concern
+       - pointRaw: Current location of user as WKB
+       - geoJson: Current location of user as geoJSON
+    */
     init(userId: String, pointRaw: String, geoJson: String) {
         self.userID = userId
         self.pointRaw = pointRaw

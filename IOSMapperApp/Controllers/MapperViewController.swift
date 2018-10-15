@@ -1,47 +1,35 @@
-//
-//  FirstViewController.swift
-//  IOSMapperApp
-//
-//  Created by Eben Du Toit on 2018/10/12.
-//  Copyright © 2018 Eben Du Toit. All rights reserved.
-//
+/**
+ - Author   : Eben du toit
+ - File : MapperViewController.swift
+ - Class    : MapperViewController
+ 
+ ### Mapper view controller implements
+ 1. UIViewController
+ 2. MKMapViewDelegate
+ 3. CLLocationManagerDelegate
+ */
 
 import UIKit
 import MapKit
 import SwiftyJSON
 
-class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-    
+class MapperViewController:
+        UIViewController,
+        MKMapViewDelegate,
+        CLLocationManagerDelegate {
+    // MARK: - Member Variables
+    /// Map view used
     @IBOutlet weak var mapView: MKMapView!
-    
-    //let initialLocation = CLLocation(latitude: 21.282778, longitude: -157.829444)
     let regionRadius: CLLocationDistance = 1000
     var prevZone: Zone? = nil
     var holeOverlays:Array<PolygonInformation> = Array<PolygonInformation>()
-   
-    // location
     var locationManager: CLLocationManager!
     var seenError : Bool = false
     var locationFixAchieved : Bool = false
     var locationStatus : NSString = "Not Started"
-
     
     
-    
-    func centerMapOnLocation() {
-        if ( holeOverlays.count == 0 ){
-            if let first = self.mapView.overlays.first {
-                let rect = self.mapView.overlays.reduce(first.boundingMapRect, {$0.union($1.boundingMapRect)})
-                self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: true)
-            }
-        } else {
-            if let first = holeOverlays.first {
-                let rect = holeOverlays.reduce(first.boundingMapRect, {$0.union($1.boundingMapRect)})
-                self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: true)
-            }
-        }
-    }
-    
+    // MARK: - UIViewController Delegates
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self;
@@ -53,6 +41,11 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
         super.viewWillAppear(animated)
     }
     
+    /**
+     viewDidAppear(_ animated: Bool) : nil
+     
+     Populate the map with polygons and points based on the parent's structure
+     */
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let barViewControllers = self.tabBarController?.viewControllers
@@ -65,23 +58,36 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
             switch element.elementType {
             case 1:
                 let geoJson = JSON.init(parseJSON: element.geoJson)
-                let artwork = Point(title: element.info,
+                let point = Point(title: element.info,
                                     locationName: "Element class",
                                     discipline: element.elementId,
-                                    coordinate: CLLocationCoordinate2D(latitude: geoJson["coordinates"].array?[1].doubleValue ?? 21.282778,
-                                                                       longitude: geoJson["coordinates"].array?[0].doubleValue ?? -157.829444))
-                mapView.addAnnotation(artwork)
+                                    coordinate:
+                    CLLocationCoordinate2D(
+                        latitude: geoJson["coordinates"].array?[1].doubleValue
+                            ?? 21.282778,
+                        longitude: geoJson["coordinates"].array?[0].doubleValue
+                            ?? -157.829444
+                    )
+                )
+                mapView.addAnnotation(point)
                 break;
             case 0:
                 let geoJson = JSON.init(parseJSON: element.geoJson)
                 let jsonCoords = geoJson["coordinates"][0]
-                var coords: Array< CLLocationCoordinate2D > = Array < CLLocationCoordinate2D >()
+                var coords: Array<CLLocationCoordinate2D>
+                    = Array <CLLocationCoordinate2D> ()
+                
                 for (_, pair) in jsonCoords {
                     let pairJson = JSON(pair)
-                    coords.append(CLLocationCoordinate2D(latitude: pairJson[1].doubleValue ,
-                                                         longitude: pairJson[0].doubleValue))
+                    coords.append(
+                        CLLocationCoordinate2D(
+                            latitude: pairJson[1].doubleValue,
+                            longitude: pairJson[0].doubleValue
+                        )
+                    )
                 }
-                let polygon = PolygonInformation(coordinates: coords, count: coords.count)
+                let polygon = PolygonInformation(coordinates: coords,
+                                                 count: coords.count)
                 polygon.classType = element.classType
                 mapView?.addOverlay(polygon)
                 
@@ -99,20 +105,37 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
                 let artwork = Point(title: element.info,
                                     locationName: "Hole class",
                                     discipline: element.elementId,
-                                    coordinate: CLLocationCoordinate2D(latitude: coords["coordinates"].array?[1].doubleValue ?? 21.282778,
-                                                                       longitude: coords["coordinates"].array?[0].doubleValue ?? -157.829444))
+                                    coordinate:
+                    
+                    CLLocationCoordinate2D(
+                        latitude: coords["coordinates"].array?[1].doubleValue
+                            ?? 21.282778,
+                        longitude: coords["coordinates"].array?[0].doubleValue
+                            ?? -157.829444
+                    )
+                    
+                )
                 mapView.addAnnotation(artwork)
                 break;
             case 0:
                 let geoJson = JSON.init(parseJSON: element.geoJson)
                 let jsonCoords = geoJson["coordinates"][0]
-                var coords: Array< CLLocationCoordinate2D > = Array < CLLocationCoordinate2D >()
+                var coords: Array<CLLocationCoordinate2D>
+                        = Array <CLLocationCoordinate2D> ()
+                
                 for (_, pair) in jsonCoords {
                     let pairJson = JSON(pair)
-                    coords.append(CLLocationCoordinate2D(latitude: pairJson[1].doubleValue ,
-                                                         longitude: pairJson[0].doubleValue))
+                    coords.append(CLLocationCoordinate2D (
+                            latitude: pairJson[1].doubleValue,
+                            longitude: pairJson[0].doubleValue
+                        )
+                    )
                 }
-                let polygon = PolygonInformation(coordinates: coords, count: coords.count)
+                let polygon = PolygonInformation(
+                    coordinates: coords,
+                    count: coords.count
+                )
+                
                 polygon.classType = element.classType
                 mapView?.addOverlay(polygon)
                 holeOverlays.append(polygon)
@@ -126,21 +149,24 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
         }
         
     }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    // MARK: - MapKit Delegates
+    func mapView(_ mapView: MKMapView,
+                 viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // 2
         guard let annotation = annotation as? Point else { return nil }
         // 3xw
         let identifier = "marker"
         var view: MKMarkerAnnotationView
         // 4
-        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if let dequeuedView = mapView
+                .dequeueReusableAnnotationView(withIdentifier: identifier)
             as? MKMarkerAnnotationView {
             dequeuedView.annotation = annotation
             view = dequeuedView
         } else {
             // 5
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            view = MKMarkerAnnotationView(annotation: annotation,
+                                          reuseIdentifier: identifier)
             view.canShowCallout = true
             view.calloutOffset = CGPoint(x: -5, y: 5)
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
@@ -149,9 +175,11 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
     }
     
     
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView,
+                 rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is PolygonInformation {
-            let renderer = MKPolygonRenderer(polygon: overlay as! PolygonInformation)
+            let renderer = MKPolygonRenderer(
+                polygon: overlay as! PolygonInformation)
             switch (overlay as! PolygonInformation).classType {
             case 0 :
                 renderer.fillColor = #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1).withAlphaComponent(0.3)
@@ -189,43 +217,92 @@ class MapperViewController: UIViewController, MKMapViewDelegate, CLLocationManag
         return MKOverlayRenderer()
     }
     
-    func determineMyCurrentLocation() {
-        // 1
-        let status  = CLLocationManager.authorizationStatus()
-        
-        // 2
-        if status == .notDetermined {
-            locationManager.requestWhenInUseAuthorization()
-            return
-        }
-        
-        // 3
-        if status == .denied || status == .restricted {
-            let alert = UIAlertController(title: "Location Services Disabled", message: "Please enable Location Services in Settings", preferredStyle: .alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(okAction)
-            
-            present(alert, animated: true, completion: nil)
-            return
-        }
-        
-        // 4
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-    }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    // MARK: - Location Manager Delegates
+    
+    
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    func locationManager(_ manager: CLLocationManager,
+                         didFailWithError error: Error)
     {
         print("Error \(error)")
+    }
+    
+    
+    // MARK: - Custom Functionality
+    
+    
+    /**
+     Postconditions:
+     Calculates the best position for the map to center on
+     1. If the map has a OuterZone selected : The OuterZone with padding
+     2. If the map has a InnerZone selected : The InnerZone with padding
+     3. If nothing selected : the user location
+     */
+    func centerMapOnLocation() {
+        if ( holeOverlays.count == 0 ){
+            if let first = self.mapView.overlays.first {
+                let rect = self.mapView.overlays.reduce(
+                    first.boundingMapRect, {$0.union($1.boundingMapRect)})
+                self.mapView.setVisibleMapRect(
+                    rect,
+                    edgePadding:UIEdgeInsets(top: 50.0,
+                                             left: 50.0,
+                                             bottom: 50.0,
+                                             right: 50.0
+                    )
+                    ,animated: true
+                )
+            }
+        } else {
+            if let first = holeOverlays.first {
+                let rect = holeOverlays.reduce(first.boundingMapRect,
+                                               {$0.union($1.boundingMapRect)})
+                self.mapView.setVisibleMapRect(
+                    rect,
+                    edgePadding:UIEdgeInsets(
+                        top: 50.0,
+                        left: 50.0,
+                        bottom: 50.0,
+                        right: 50.0
+                    ),
+                    animated: true)
+            }
+        }
+    }
+    
+
+    /// Detremine if the application has access to location services
+    func determineMyCurrentLocation() {
+        let status  = CLLocationManager.authorizationStatus()
+        if status == .notDetermined {
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        if status == .denied || status == .restricted {
+            let alert = UIAlertController(
+                title: "Location Services Disabled",
+                message: "Please enable Location Services in Settings",
+                preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK",
+                                         style: .default,
+                                         handler: nil)
+            alert.addAction(okAction)
+            
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
 }

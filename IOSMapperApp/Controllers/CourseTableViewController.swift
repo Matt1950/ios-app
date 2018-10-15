@@ -1,10 +1,10 @@
-//
-//  CourseTableViewController.swift
-//  IOSMapperApp
-//
-//  Created by Eben Du Toit on 2018/10/13.
-//  Copyright © 2018 Eben Du Toit. All rights reserved.
-//
+/**
+  CourseTableViewController.swift
+  IOSMapperApp
+
+  Created by Eben Du Toit on 2018/10/13.
+  Copyright © 2018 Eben Du Toit. All rights reserved.
+*/
 
 import UIKit
 import SwiftyJSON
@@ -31,11 +31,13 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView,
+                            numberOfRowsInSection section: Int) -> Int {
         return VisibleData.count
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView,
+                            didSelectRowAt indexPath: IndexPath) {
         if (VisibleData[indexPath.row].parentZone == nil){
             if (selectedOuter == VisibleData[indexPath.row]) {
                 selectedOuter = nil
@@ -56,8 +58,13 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as UITableViewCell
+    override func tableView(_ tableView: UITableView,
+                            cellForRowAt indexPath: IndexPath
+        ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+                withIdentifier: "cell",
+                for: indexPath
+            ) as UITableViewCell
 
         cell.textLabel?.text = VisibleData[indexPath.row].zoneName
         cell.detailTextLabel?.text = VisibleData[indexPath.row].info
@@ -91,7 +98,8 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         Networking.GetZones { (result) in
             let jsonResult = JSON(result ?? "[]")
             for (_,subJson):(String, JSON) in jsonResult {
-                    let z = ModelFactory.createZone(subJson: subJson, parentZone: nil)
+                    let z = ModelFactory.createZone(subJson: subJson,
+                                                    parentZone: nil)
                     self.TableData.append(z)
                     self.refresh()
             }
@@ -125,7 +133,9 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         
         for item in TableData {
             if (item.parentZone == nil) {
-                if (item.zoneName.range(of: query, options: [.regularExpression, .caseInsensitive]) != nil) {
+                if (item.zoneName.range(of: query,
+                                        options:
+                    [ .regularExpression,.caseInsensitive]) != nil) {
                         clone.append(item)
                 }
                 
