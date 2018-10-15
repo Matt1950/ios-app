@@ -182,23 +182,43 @@ class MapperViewController:
                 polygon: overlay as! PolygonInformation)
             switch (overlay as! PolygonInformation).classType {
             case 0 :
-                renderer.fillColor = #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1).withAlphaComponent(0.3)
-                renderer.strokeColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.1294117719,
+                                             green: 0.2156862766,
+                                             blue: 0.06666667014,
+                                             alpha: 1).withAlphaComponent(0.3)
+                renderer.strokeColor = UIColor(red: 0.721568644,
+                                               green: 0.8862745166,
+                                               blue: 0.5921568871, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             case 1 :
-                renderer.fillColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1).withAlphaComponent(0.5)
-                renderer.strokeColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.2745098174,
+                                             green: 0.4862745106,
+                                             blue: 0.1411764771,
+                                             alpha: 1).withAlphaComponent(0.5)
+                renderer.strokeColor = UIColor(red: 0.4666666687,
+                                               green: 0.7647058964,
+                                               blue: 0.2666666806, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             case 2 :
-                renderer.fillColor = #colorLiteral(red: 0.7742854953, green: 0.8705892563, blue: 0.4055302739, alpha: 1).withAlphaComponent(0.5)
-                renderer.strokeColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.7742854953,
+                                             green: 0.8705892563,
+                                             blue: 0.4055302739,
+                                             alpha: 1).withAlphaComponent(0.5)
+                renderer.strokeColor = UIColor(red: 0.5568627715,
+                                               green: 0.3529411852,
+                                               blue: 0.9686274529, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             case 3 :
-                renderer.fillColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1).withAlphaComponent(0.5)
-                renderer.strokeColor = #colorLiteral(red: 0.3098039329, green: 0.2039215714, blue: 0.03921568766, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.9529411793,
+                                             green: 0.6862745285,
+                                             blue: 0.1333333403,
+                                             alpha: 1).withAlphaComponent(0.5)
+                renderer.strokeColor = UIColor(red: 0.3098039329,
+                                               green: 0.2039215714,
+                                               blue: 0.03921568766, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             case 4 :
