@@ -33,8 +33,10 @@ public struct Networking {
                 completion(JSON(response.result.value ?? "[]"))
         }
     }
-    static func GetInnerZones(zoneId: JSON, completion: @escaping (JSON?) -> Void ) {
-        let url :String = pretype + dns + innerZones + zoneId["zoneID"].stringValue
+    
+    
+    static func GetZoneInformation(zoneId: String, completion: @escaping (JSON?) -> Void ) {
+        let url :String = pretype + dns + innerZones + zoneId
         
         Alamofire.request(url,method: .get)
             .validate()
@@ -45,7 +47,7 @@ public struct Networking {
                     completion(nil)
                     return
                 }
-                completion(JSON(response.result.value ?? "[]")["innerZones"])
+                completion(JSON(response.result.value ?? "[]"))
         }
     }
 //    static func GetInnerZones(zoneId: String, closure: @escaping (_ json: String)->()) {
