@@ -20,10 +20,30 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n1c-96-lDY">
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mSV-SH-gkX">
+                                <rect key="frame" x="318" y="28" width="49" height="22.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="18"/>
+                                <color key="textColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="0.72941176470000002" green="0.85490196080000003" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <size key="shadowOffset" width="0.0" height="1"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecI-Q2-EkP">
+                                <rect key="frame" x="318" y="52.5" width="49" height="22.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="18"/>
+                                <color key="textColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="0.72941176470000002" green="0.85490196080000003" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <size key="shadowOffset" width="0.0" height="1"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="n1c-96-lDY" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" id="E7C-6J-IbG"/>
+                            <constraint firstItem="ecI-Q2-EkP" firstAttribute="top" secondItem="mSV-SH-gkX" secondAttribute="bottom" constant="2" id="G3t-Du-SYF"/>
+                            <constraint firstItem="mSV-SH-gkX" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="8" id="GIG-ja-dyt"/>
+                            <constraint firstItem="n1c-96-lDY" firstAttribute="trailing" secondItem="ecI-Q2-EkP" secondAttribute="trailing" constant="8" id="Qrh-mS-4wH"/>
+                            <constraint firstItem="n1c-96-lDY" firstAttribute="trailing" secondItem="mSV-SH-gkX" secondAttribute="trailing" constant="8" id="SRn-lu-RF2"/>
                             <constraint firstItem="n1c-96-lDY" firstAttribute="leading" secondItem="PQr-Ze-W5v" secondAttribute="leading" id="fbx-jC-PdO"/>
                             <constraint firstItem="PQr-Ze-W5v" firstAttribute="trailing" secondItem="n1c-96-lDY" secondAttribute="trailing" id="hbc-o4-ODL"/>
                             <constraint firstItem="PQr-Ze-W5v" firstAttribute="bottom" secondItem="n1c-96-lDY" secondAttribute="bottom" id="o70-Mk-SfU"/>
@@ -32,6 +52,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Course" image="first" id="acW-dT-cKf" userLabel="Holes"/>
                     <connections>
+                        <outlet property="DistanceLable" destination="ecI-Q2-EkP" id="Y9F-co-roR"/>
+                        <outlet property="InformationLale" destination="mSV-SH-gkX" id="cwb-h1-d46"/>
                         <outlet property="mapView" destination="n1c-96-lDY" id="hwz-0b-J8U"/>
                     </connections>
                 </viewController>

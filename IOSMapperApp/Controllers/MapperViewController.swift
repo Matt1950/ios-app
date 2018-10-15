@@ -35,14 +35,18 @@ class MapperViewController:
     var seenError : Bool = false
     var locationFixAchieved : Bool = false
     var locationStatus : NSString = "Not Started"
+    var currentSelectedHoleTee : CLLocationCoordinate2D? = nil
+    var userLocation :CLLocationCoordinate2D? = nil
     
+    @IBOutlet weak var informationLale: UILabel!
+    @IBOutlet weak var distanceLable: UILabel!
     
     // MARK: - UIViewController Delegates
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self;
         locationManager = CLLocationManager()
-        determineMyCurrentLocation()
+        determineCurrentLocation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,24 +62,33 @@ class MapperViewController:
         super.viewDidAppear(animated)
         let barViewControllers = self.tabBarController?.viewControllers
         let courses = barViewControllers![0] as! CourseTableViewController
+        var innerZoneName = ""
+        if (courses.selectedInner != nil){
+            innerZoneName = " - " + (courses.selectedInner?.zoneName ?? "")
+        } else {
+            innerZoneName = courses.selectedInner?.zoneName ?? ""
+        }
+        self.informationLale.text = ((courses.selectedOuter?.zoneName ?? "") +
+             innerZoneName )
         
         mapView.removeAnnotations(mapView.annotations)
         mapView.removeOverlays(mapView.overlays)
-        
         for element in courses.selectedOuter?.Elements ?? [] {
             switch element.elementType {
             case 1:
                 let geoJson = JSON.init(parseJSON: element.geoJson)
+                
+                let pinLoc = CLLocationCoordinate2D(
+                    latitude: geoJson["coordinates"].array?[1].doubleValue
+                        ?? 21.282778,
+                    longitude: geoJson["coordinates"].array?[0].doubleValue
+                        ?? -157.829444
+                )
+                
                 let point = Point(title: element.info,
-                                    locationName: "Element class",
-                                    discipline: element.elementId,
-                                    coordinate:
-                    CLLocationCoordinate2D(
-                        latitude: geoJson["coordinates"].array?[1].doubleValue
-                            ?? 21.282778,
-                        longitude: geoJson["coordinates"].array?[0].doubleValue
-                            ?? -157.829444
-                    )
+                                  locationName: "",
+                                  discipline: element.elementId,
+                                  coordinate: pinLoc
                 )
                 mapView.addAnnotation(point)
                 break;
@@ -105,25 +118,45 @@ class MapperViewController:
             }
             
         }
+        
         holeOverlays.removeAll()
         for element in courses.selectedInner?.Elements ?? [] {
             switch element.elementType {
             case 1:
                 let coords = JSON.init(parseJSON: element.geoJson)
-                let artwork = Point(title: element.info,
-                                    locationName: "Hole class",
-                                    discipline: element.elementId,
-                                    coordinate:
-                    
-                    CLLocationCoordinate2D(
-                        latitude: coords["coordinates"].array?[1].doubleValue
-                            ?? 21.282778,
-                        longitude: coords["coordinates"].array?[0].doubleValue
-                            ?? -157.829444
-                    )
-                    
+                let pinLoc = CLLocationCoordinate2D(
+                    latitude: coords["coordinates"].array?[1].doubleValue
+                        ?? 21.282778,
+                    longitude: coords["coordinates"].array?[0].doubleValue
+                        ?? -157.829444
                 )
-                mapView.addAnnotation(artwork)
+                if (element.classType == 2) {
+                    currentSelectedHoleTee = CLLocationCoordinate2D.init (
+                        latitude: pinLoc.latitude,
+                        longitude: pinLoc.longitude
+                    )
+                    if ( userLocation != nil) {
+                        let distance = CLLocation.init(
+                            latitude: userLocation!.latitude,
+                            longitude: userLocation!.longitude
+                        ).distance (from: CLLocation.init (
+                            latitude: pinLoc.latitude,
+                            longitude: pinLoc.longitude
+                            )
+                        )
+                        self.distanceLable.text = "⛳️ " + String (
+                            format:"%.2f", distance) + recommendClub(
+                                dist: distance
+                        )
+                    }
+                }
+                
+                let point = Point(title: element.info,
+                                    locationName: "",
+                                    discipline: element.elementId,
+                                    coordinate: pinLoc
+                                )
+                mapView.addAnnotation(point)
                 break;
             case 0:
                 let geoJson = JSON.init(parseJSON: element.geoJson)
@@ -160,19 +193,27 @@ class MapperViewController:
     // MARK: - MapKit Delegates
     func mapView(_ mapView: MKMapView,
                  viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        // 2
         guard let annotation = annotation as? Point else { return nil }
-        // 3xw
         let identifier = "marker"
         var view: MKMarkerAnnotationView
-        // 4
         if let dequeuedView = mapView
                 .dequeueReusableAnnotationView(withIdentifier: identifier)
             as? MKMarkerAnnotationView {
+            if (userLocation != nil){
+                annotation.locationName = String (
+                    format:"%.2f",
+                    CLLocation.init(latitude: userLocation!.latitude,
+                                    longitude: userLocation!.longitude)
+                        .distance (from: CLLocation.init(
+                            latitude: annotation.coordinate.latitude,
+                            longitude: annotation.coordinate.longitude)
+                    )
+                )
+            }
+           
             dequeuedView.annotation = annotation
             view = dequeuedView
         } else {
-            // 5
             view = MKMarkerAnnotationView(annotation: annotation,
                                           reuseIdentifier: identifier)
             view.canShowCallout = true
@@ -261,18 +302,42 @@ class MapperViewController:
     
     func locationManager(_ manager: CLLocationManager,
                          didUpdateLocations locations: [CLLocation]) {
-        let userLocation:CLLocation = locations[0] as CLLocation
+        userLocation =  CLLocationCoordinate2D.init(
+            latitude: locations[0].coordinate.latitude,
+            longitude: locations[0].coordinate.longitude
+        )
+        
+        if ( currentSelectedHoleTee != nil && userLocation != nil) {
+            let distance = CLLocation.init(
+                latitude: userLocation!.latitude,
+                longitude: userLocation!.longitude
+                ).distance (
+                    from: CLLocation.init (
+                        latitude: currentSelectedHoleTee!.latitude,
+                        longitude: currentSelectedHoleTee!.longitude
+                    )
+            )
+            self.distanceLable.text = "⛳️ " + String (
+                format:"%.2f", distance) + recommendClub(
+                    dist: distance
+            )
+        }
+        
         let location: JSON = [
             "type": "Point",
             "coordinates": [
-                Double(userLocation.coordinate.longitude
+                Double(userLocation!.longitude
                     ).roundToPlaces(places: 6),
                 
-                Double(userLocation.coordinate.latitude
+                Double(userLocation!.latitude
                     ).roundToPlaces(places: 6)
             ]
         ]
-        Networking.sendMessage(message: location.rawString())
+        
+        Networking.sendMessage(message: location.rawString(),
+                               defaults: (self.tabBarController as!
+                                ParentViewController).defaults
+        )
     }
     
     // MARK: - Custom Functionality
@@ -286,6 +351,7 @@ class MapperViewController:
      3. If nothing selected : the user location
      */
     func centerMapOnLocation() {
+        
         if ( holeOverlays.count == 0 ){
             if let first = self.mapView.overlays.first {
                 let rect = self.mapView.overlays.reduce(
@@ -319,12 +385,14 @@ class MapperViewController:
     
 
     /// Detremine if the application has access to location services
-    func determineMyCurrentLocation() {
+    func determineCurrentLocation() {
         let status  = CLLocationManager.authorizationStatus()
+        
         if status == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
             return
         }
+        
         if status == .denied || status == .restricted {
             let alert = UIAlertController(
                 title: "Location Services Disabled",
@@ -339,10 +407,39 @@ class MapperViewController:
             present(alert, animated: true, completion: nil)
             return
         }
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
     }
     
+    /***
+     * recommendClub(double) : String
+     *
+     *     Takes the distance from the player to the current hole as a
+     *     parameter. Returns the name of the recommended club based on
+     *     average club ranges.
+     ***/
+    func recommendClub(dist : Double) -> String {
+        let clubs = [ "Driver", "3-wood", "2-iron", "3-iron",
+                      "4-iron", "5-iron", "6-iron", "7-iron",
+                      "8-iron", "9-iron", "Pitching wedge",
+                      "Sand wedge", "Lob wedge" ]
+    
+        let distances:[Double] = [200,180,165,155,146,
+                                  137,128,119,110,101,
+                                  91,78,55]
+    
+        var smallest: Double = abs(dist - distances[0])
+        var smallestIndex: Int = 0
+        for i in 1...distances.count - 1 {
+            let diff: Double = abs(dist - distances[i])
+            if (diff < smallest) {
+                smallest = diff
+                smallestIndex = i
+            }
+        }
+        return " 🏌🏼‍♂️ " + clubs[smallestIndex]
+    }
+
 }

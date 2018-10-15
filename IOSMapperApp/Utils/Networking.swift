@@ -68,7 +68,7 @@ public struct Networking {
         }
     }
     
-    static func connectToWebsocket(message: String?) {
+    static func connectToWebsocket(message: String?, userID: String?) {
         let url = webSocketType + dns + webSocketEndpoint
         if (socket == nil) {
             socket = WebSocket(url: URL(string: url)!)
@@ -85,10 +85,11 @@ public struct Networking {
             //websocketDidReceiveMessage
             socket!.onText = { (text: String) in
                 let jsonString = JSON.init(parseJSON: text)
-                UserDefaults.standard.set (
-                    jsonString["UserID"].stringValue,
-                    forKey:"UserID"
-                )
+                if (userID == nil) {
+                        UserDefaults.standard.set (
+                            jsonString["UserID"].stringValue,
+                            forKey:"UserID")
+                }
             }
             socket!.connect()
         } else {
@@ -97,23 +98,30 @@ public struct Networking {
             }
         }
     }
-    static func sendMessage(message: String?) {
+    
+    static func sendMessage(message: String?, defaults: UserDefaults?) {
         if (message != nil) {
-            let userId = UserDefaults.standard.string(forKey: "UserID")
-            if (userId == nil){
+            if (defaults?.string(forKey: "UserID") == nil) {
                 let locationMessage: JSON = [
                     "Location": message!,
                     ]
-                connectToWebsocket(message: locationMessage.rawString())
+                connectToWebsocket(message: locationMessage.rawString(),
+                                   userID: defaults?.string(forKey: "UserID"))
             } else {
                 let locationMessage: JSON = [
-                    "UserID": userId ?? "",
+                    "UserID": defaults?.string(forKey: "UserID") ?? "",
                     "Location": message!,
                     ]
-                connectToWebsocket(message: locationMessage.rawString())
+                connectToWebsocket(message: locationMessage.rawString(),
+                                   userID: defaults?.string(forKey: "UserID"))
             }
+            
             if socket?.isConnected ?? false {
-                socket?.write(string: message!)
+                let locationMessage: JSON = [
+                    "UserID": defaults?.string(forKey: "UserID") ?? "",
+                    "Location": message!,
+                    ]
+                socket?.write(string: locationMessage.rawString() ?? "")
             }
         }
     }

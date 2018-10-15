@@ -11,7 +11,7 @@ import MapKit
 
 class Point: NSObject, MKAnnotation {
     let title: String?
-    let locationName: String
+    var locationName: String
     let discipline: String
     let coordinate: CLLocationCoordinate2D
     /**
