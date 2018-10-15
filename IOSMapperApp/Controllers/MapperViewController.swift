@@ -222,13 +222,23 @@ class MapperViewController:
                 renderer.lineWidth = 0.5
                 return renderer
             case 4 :
-                renderer.fillColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1).withAlphaComponent(0.5)
-                renderer.strokeColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.2392156869,
+                                             green: 0.6745098233,
+                                             blue: 0.9686274529,
+                                             alpha: 1).withAlphaComponent(0.5)
+                renderer.strokeColor = UIColor(red: 0.1215686277,
+                                               green: 0.01176470611,
+                                               blue: 0.4235294163, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             default :
-                renderer.fillColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1).withAlphaComponent(0.5)
-                renderer.strokeColor = #colorLiteral(red: 0.1333333333, green: 0.1568627451, blue: 0.1921568627, alpha: 1)
+                renderer.fillColor = UIColor(red: 0.3333333433,
+                                             green: 0.3333333433,
+                                             blue: 0.3333333433,
+                                             alpha: 1).withAlphaComponent(0.5)
+                renderer.strokeColor = UIColor(red: 0.1333333333,
+                                               green: 0.1568627451,
+                                               blue: 0.1921568627, alpha: 1)
                 renderer.lineWidth = 0.5
                 return renderer
             }
