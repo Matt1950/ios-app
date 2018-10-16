@@ -37,6 +37,8 @@ class MapperViewController:
     var locationStatus : NSString = "Not Started"
     var currentSelectedHoleTee : CLLocationCoordinate2D? = nil
     var userLocation :CLLocationCoordinate2D? = nil
+    let defaultLat : Double = 21.282778
+    let defaultLng : Double = -157.829444
     
     @IBOutlet weak var informationLale: UILabel!
     @IBOutlet weak var distanceLable: UILabel!
@@ -80,11 +82,10 @@ class MapperViewController:
                 
                 let pinLoc = CLLocationCoordinate2D(
                     latitude: geoJson["coordinates"].array?[1].doubleValue
-                        ?? 21.282778,
+                        ?? defaultLat,
                     longitude: geoJson["coordinates"].array?[0].doubleValue
-                        ?? -157.829444
+                        ?? defaultLng
                 )
-                
                 let point = Point(title: element.info,
                                   locationName: "",
                                   discipline: element.elementId,
@@ -126,9 +127,9 @@ class MapperViewController:
                 let coords = JSON.init(parseJSON: element.geoJson)
                 let pinLoc = CLLocationCoordinate2D(
                     latitude: coords["coordinates"].array?[1].doubleValue
-                        ?? 21.282778,
+                        ?? defaultLat,
                     longitude: coords["coordinates"].array?[0].doubleValue
-                        ?? -157.829444
+                        ?? defaultLng
                 )
                 if (element.classType == 2) {
                     currentSelectedHoleTee = CLLocationCoordinate2D.init (
@@ -193,8 +194,10 @@ class MapperViewController:
     // MARK: - MapKit Delegates
     func mapView(_ mapView: MKMapView,
                  viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
         guard let annotation = annotation as? Point else { return nil }
         let identifier = "marker"
+        
         var view: MKMarkerAnnotationView
         if let dequeuedView = mapView
                 .dequeueReusableAnnotationView(withIdentifier: identifier)
@@ -202,10 +205,10 @@ class MapperViewController:
             if (userLocation != nil){
                 annotation.locationName = String (
                     format:"%.2f",
-                    CLLocation.init(latitude: userLocation!.latitude,
+                    CLLocation.init(latitude:  userLocation!.latitude,
                                     longitude: userLocation!.longitude)
                         .distance (from: CLLocation.init(
-                            latitude: annotation.coordinate.latitude,
+                            latitude:  annotation.coordinate.latitude,
                             longitude: annotation.coordinate.longitude)
                     )
                 )
@@ -298,8 +301,6 @@ class MapperViewController:
     
     
     // MARK: - Location Manager Delegates
-    
-    
     func locationManager(_ manager: CLLocationManager,
                          didUpdateLocations locations: [CLLocation]) {
         userLocation =  CLLocationCoordinate2D.init(

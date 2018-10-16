@@ -54,6 +54,7 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
             } else {
                 selectedInner = VisibleData[indexPath.row]
                 selectedOuter = selectedInner?.parentZone
+                self.tabBarController?.selectedIndex = 1;
             }
         }
     }

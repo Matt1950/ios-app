@@ -50,7 +50,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Course" image="first" id="acW-dT-cKf" userLabel="Holes"/>
+                    <tabBarItem key="tabBarItem" title="Course" image="second" id="acW-dT-cKf" userLabel="Holes"/>
                     <connections>
                         <outlet property="DistanceLable" destination="ecI-Q2-EkP" id="Y9F-co-roR"/>
                         <outlet property="InformationLale" destination="mSV-SH-gkX" id="cwb-h1-d46"/>
@@ -108,7 +108,7 @@
                             <outlet property="delegate" destination="xqY-Bl-9KB" id="h7x-qx-bpb"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Courses" selectedImage="second" id="WOL-06-V9M"/>
+                    <tabBarItem key="tabBarItem" title="Courses" image="first" selectedImage="first" id="WOL-06-V9M"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lYG-h4-cgd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -134,8 +134,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
+        <image name="first" width="25" height="25"/>
+        <image name="second" width="25" height="25"/>
     </resources>
     <color key="tintColor" red="0.72941176470588232" green="0.85490196078431369" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
 </document>

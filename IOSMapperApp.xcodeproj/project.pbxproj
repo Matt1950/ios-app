@@ -15,12 +15,12 @@
 		74A5A0252170BAEC00199E62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A5A0242170BAEC00199E62 /* AppDelegate.swift */; };
 		74A5A0272170BAEC00199E62 /* MapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A5A0262170BAEC00199E62 /* MapperViewController.swift */; };
 		74A5A02C2170BAEC00199E62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A5A02A2170BAEC00199E62 /* Main.storyboard */; };
-		74A5A02E2170BAEF00199E62 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74A5A02D2170BAEF00199E62 /* Assets.xcassets */; };
 		74A5A0312170BAEF00199E62 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A5A02F2170BAEF00199E62 /* LaunchScreen.storyboard */; };
 		74A5A03C2170BAEF00199E62 /* IOSMapperAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A5A03B2170BAEF00199E62 /* IOSMapperAppTests.swift */; };
 		74A5A0472170BAEF00199E62 /* IOSMapperAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A5A0462170BAEF00199E62 /* IOSMapperAppUITests.swift */; };
 		74DE539E21732D3E00C3B69B /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DE539D21732D3E00C3B69B /* ParentViewController.swift */; };
 		74DE53A0217338AE00C3B69B /* ModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DE539F217338AE00C3B69B /* ModelFactory.swift */; };
+		74FC883121760F010074C4C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74FC883021760F010074C4C9 /* Assets.xcassets */; };
 		859F3FA34FABD2FA5501D617 /* libPods-IOSMapperApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F31745729E9BA7FE055BB8 /* libPods-IOSMapperApp.a */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +53,6 @@
 		74A5A0242170BAEC00199E62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		74A5A0262170BAEC00199E62 /* MapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapperViewController.swift; sourceTree = "<group>"; };
 		74A5A02B2170BAEC00199E62 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		74A5A02D2170BAEF00199E62 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74A5A0302170BAEF00199E62 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74A5A0322170BAEF00199E62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74A5A0372170BAEF00199E62 /* IOSMapperAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IOSMapperAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +63,7 @@
 		74A5A0482170BAEF00199E62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74DE539D21732D3E00C3B69B /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		74DE539F217338AE00C3B69B /* ModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFactory.swift; sourceTree = "<group>"; };
+		74FC883021760F010074C4C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C41CD92826074CDE52E724A6 /* Pods-IOSMapperApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IOSMapperApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IOSMapperApp/Pods-IOSMapperApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,12 +164,12 @@
 		74A5A0232170BAEC00199E62 /* IOSMapperApp */ = {
 			isa = PBXGroup;
 			children = (
+				74FC883021760F010074C4C9 /* Assets.xcassets */,
 				7408E28B21722F870064BDB5 /* Storyboards */,
 				7408E28A21722F780064BDB5 /* Controllers */,
 				7408E28921722F6D0064BDB5 /* Utils */,
 				7408E28821722F620064BDB5 /* Models */,
 				74A5A0242170BAEC00199E62 /* AppDelegate.swift */,
-				74A5A02D2170BAEF00199E62 /* Assets.xcassets */,
 				74A5A0322170BAEF00199E62 /* Info.plist */,
 			);
 			path = IOSMapperApp;
@@ -308,7 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74A5A0312170BAEF00199E62 /* LaunchScreen.storyboard in Resources */,
-				74A5A02E2170BAEF00199E62 /* Assets.xcassets in Resources */,
+				74FC883121760F010074C4C9 /* Assets.xcassets in Resources */,
 				74A5A02C2170BAEC00199E62 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
