@@ -41,8 +41,10 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         if (VisibleData[indexPath.row].parentZone == nil){
             if (selectedOuter == VisibleData[indexPath.row]) {
                 selectedOuter = nil
+                selectedInner = nil
             } else {
                 selectedOuter = VisibleData[indexPath.row]
+                selectedInner = nil
             }
             refresh()
         } else {
@@ -71,13 +73,19 @@ class CourseTableViewController: UITableViewController, UISearchBarDelegate {
         cell.detailTextLabel?.text = VisibleData[indexPath.row].info
         cell.accessoryType = .none
         if ( VisibleData[indexPath.row] == selectedOuter ) {
-            cell.backgroundColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+            cell.backgroundColor = UIColor(red: 0.721568644,
+                                           green: 0.8862745166,
+                                           blue: 0.5921568871, alpha: 1)
         } else {
             if (VisibleData[indexPath.row].parentZone != nil){
-                cell.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.9137254902, blue: 0.9137254902, alpha: 1)
+                cell.backgroundColor = UIColor(red: 0.9137254902,
+                                               green: 0.9137254902,
+                                               blue: 0.9137254902, alpha: 1)
                 cell.accessoryType = .disclosureIndicator
             }else {
-                cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                cell.backgroundColor = UIColor(red: 1,
+                                               green: 1,
+                                               blue: 1, alpha: 1)
             }
         }
         return cell

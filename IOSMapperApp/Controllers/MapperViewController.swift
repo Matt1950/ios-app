@@ -39,6 +39,9 @@ class MapperViewController:
     var userLocation :CLLocationCoordinate2D? = nil
     let defaultLat : Double = 21.282778
     let defaultLng : Double = -157.829444
+    let elements: [String] = ["Point of interest", "Hole", "Tee"]
+    let elementsPoly: [String] = ["Rough", "Fairway", "Green",
+                                  "Bunker", "Water"]
     
     @IBOutlet weak var informationLale: UILabel!
     @IBOutlet weak var distanceLable: UILabel!
@@ -51,17 +54,14 @@ class MapperViewController:
         determineCurrentLocation()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
     /**
      viewDidAppear(_ animated: Bool) : nil
      
      Populate the map with polygons and points based on the parent's structure
      */
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         let barViewControllers = self.tabBarController?.viewControllers
         let courses = barViewControllers![0] as! CourseTableViewController
         var innerZoneName = ""
@@ -72,7 +72,6 @@ class MapperViewController:
         }
         self.informationLale.text = ((courses.selectedOuter?.zoneName ?? "") +
              innerZoneName )
-        
         mapView.removeAnnotations(mapView.annotations)
         mapView.removeOverlays(mapView.overlays)
         for element in courses.selectedOuter?.Elements ?? [] {
@@ -86,9 +85,9 @@ class MapperViewController:
                     longitude: geoJson["coordinates"].array?[0].doubleValue
                         ?? defaultLng
                 )
-                let point = Point(title: element.info,
+                let point = Point(title: elements[element.classType],
                                   locationName: "",
-                                  discipline: element.elementId,
+                                  discipline: element.info,
                                   coordinate: pinLoc
                 )
                 mapView.addAnnotation(point)
@@ -152,9 +151,9 @@ class MapperViewController:
                     }
                 }
                 
-                let point = Point(title: element.info,
+                let point = Point(title: elements[element.classType],
                                     locationName: "",
-                                    discipline: element.elementId,
+                                    discipline: element.info,
                                     coordinate: pinLoc
                                 )
                 mapView.addAnnotation(point)
@@ -203,18 +202,28 @@ class MapperViewController:
                 .dequeueReusableAnnotationView(withIdentifier: identifier)
             as? MKMarkerAnnotationView {
             if (userLocation != nil){
-                annotation.locationName = String (
-                    format:"%.2f",
-                    CLLocation.init(latitude:  userLocation!.latitude,
-                                    longitude: userLocation!.longitude)
-                        .distance (from: CLLocation.init(
-                            latitude:  annotation.coordinate.latitude,
-                            longitude: annotation.coordinate.longitude)
+                dequeuedView.animatesWhenAdded = true;
+                
+                let distance = CLLocation.init(
+                    latitude: userLocation!.latitude,
+                    longitude: userLocation!.longitude
+                    ).distance (from: CLLocation.init (
+                        latitude: annotation.coordinate.latitude,
+                        longitude: annotation.coordinate.longitude
                     )
                 )
+                annotation.locationName = "⛳️ " + String (
+                    format:"%.2f", distance) + recommendClub(
+                        dist: distance
+                )
             }
-           
+            
             dequeuedView.annotation = annotation
+            if (annotation.title == elements[1]){
+                dequeuedView.glyphImage = #imageLiteral(resourceName: "flag")
+            } else if (annotation.title == elements[2]){
+                dequeuedView.glyphImage = #imageLiteral(resourceName: "tee")
+            }
             view = dequeuedView
         } else {
             view = MKMarkerAnnotationView(annotation: annotation,
@@ -251,7 +260,7 @@ class MapperViewController:
                 renderer.strokeColor = UIColor(red: 0.4666666687,
                                                green: 0.7647058964,
                                                blue: 0.2666666806, alpha: 1)
-                renderer.lineWidth = 0.5
+                renderer.lineWidth = 0.7
                 return renderer
             case 2 :
                 renderer.fillColor = UIColor(red: 0.7742854953,
@@ -261,7 +270,7 @@ class MapperViewController:
                 renderer.strokeColor = UIColor(red: 0.5568627715,
                                                green: 0.3529411852,
                                                blue: 0.9686274529, alpha: 1)
-                renderer.lineWidth = 0.5
+                renderer.lineWidth = 0.7
                 return renderer
             case 3 :
                 renderer.fillColor = UIColor(red: 0.9529411793,
@@ -271,17 +280,17 @@ class MapperViewController:
                 renderer.strokeColor = UIColor(red: 0.3098039329,
                                                green: 0.2039215714,
                                                blue: 0.03921568766, alpha: 1)
-                renderer.lineWidth = 0.5
+                renderer.lineWidth = 0.7
                 return renderer
             case 4 :
                 renderer.fillColor = UIColor(red: 0.2392156869,
                                              green: 0.6745098233,
                                              blue: 0.9686274529,
-                                             alpha: 1).withAlphaComponent(0.5)
+                                             alpha: 1).withAlphaComponent(0.7)
                 renderer.strokeColor = UIColor(red: 0.1215686277,
                                                green: 0.01176470611,
                                                blue: 0.4235294163, alpha: 1)
-                renderer.lineWidth = 0.5
+                renderer.lineWidth = 0.7
                 return renderer
             default :
                 renderer.fillColor = UIColor(red: 0.3333333433,
@@ -291,7 +300,7 @@ class MapperViewController:
                 renderer.strokeColor = UIColor(red: 0.1333333333,
                                                green: 0.1568627451,
                                                blue: 0.1921568627, alpha: 1)
-                renderer.lineWidth = 0.5
+                renderer.lineWidth = 0.7
                 return renderer
             }
         }

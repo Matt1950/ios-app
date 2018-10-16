@@ -36,6 +36,7 @@ class Point: NSObject, MKAnnotation {
         super.init()
     }
     
+    
     var subtitle: String? {
         return locationName
     }
