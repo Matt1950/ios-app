@@ -61,7 +61,6 @@ class MapperViewController:
      */
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         let barViewControllers = self.tabBarController?.viewControllers
         let courses = barViewControllers![0] as! CourseTableViewController
         var innerZoneName = ""
@@ -130,7 +129,7 @@ class MapperViewController:
                     longitude: coords["coordinates"].array?[0].doubleValue
                         ?? defaultLng
                 )
-                if (element.classType == 2) {
+                if (element.classType == 1) {
                     currentSelectedHoleTee = CLLocationCoordinate2D.init (
                         latitude: pinLoc.latitude,
                         longitude: pinLoc.longitude
